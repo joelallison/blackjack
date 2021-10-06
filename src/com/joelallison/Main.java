@@ -1,7 +1,6 @@
 package com.joelallison;
 
-import java.util.ArrayList;
-import java.util.Random;
+import java.util.*;
 
 public class Main {
 
@@ -55,13 +54,18 @@ public class Main {
 
         System.out.println("Blackjack");
 
-        int round = 0;
+        int count = 0;
         //game loop
         boolean playing = false;
         do{
-            round++;
-
-            System.out.println("Round" + round);
+            count++;
+            int dealtCard = random.nextInt(ArrayList.size());
+            if(count % 2 == 0){
+                System.out.println("Round " + count/2);
+                playerHand.add(cards.get(dealtCard));
+            }else{
+                computerHand.add(cards.get(dealtCard));
+            }cards.remove(dealtCard);
         }while (playing);
     }
 }
