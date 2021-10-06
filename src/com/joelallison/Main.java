@@ -58,14 +58,36 @@ public class Main {
         int playerAceCount = 0;
         int computerTotal = 0;
         int computerAceCount = 0;
+        String choice = "";
         //game loop
         boolean playing = true;
         do{
             count++;
+            //calc the totals
+            for (char card:playerHand) {
+                if("23456789".contains(Character.toString(card))){
+                    playerTotal += Character.getNumericValue(card);
+                }else if(card != 'A'){
+                    playerTotal += 10;
+                }else{
+                    playerTotal += 1;
+                    playerAceCount += 1;
+                }
+            }
+            for (char card:computerHand) {
+                if("23456789".contains(Character.toString(card))){
+                    computerTotal += Character.getNumericValue(card);
+                }else if(card != 'A'){
+                    computerTotal += 10;
+                }else{
+                    computerTotal += 1;
+                    computerAceCount += 1;
+                }
+            }
             int dealtCard = random.nextInt(cards.size());
-            if(count % 2 == 0){
+            if(count % 2 == 1){
                 //player turn
-                System.out.println("Round " + count/2);
+                System.out.println("Round " + ((count/2) + (count%2)));
                 playerHand.add(cards.get(dealtCard));
 
                 System.out.println(cards.get(dealtCard));
@@ -76,30 +98,13 @@ public class Main {
             }else{
                 //computer "turn"
                 computerHand.add(cards.get(dealtCard));
+
+                //end of each total round
+                System.out.println("Your cards are:");
+                printHand(playerHand);
+                System.out.println("\nThis means that your total is " + playerTotal + "\nWould you like to hit or stand? [h/s]");
+                choice = userInput.next();
             }cards.remove(dealtCard);
-
-            //calc the totals
-            for (char card:playerHand) {
-                if("23456789".contains(Character.toString(card))){
-                    playerTotal += (int)card;
-                }else if(card != 'A'){
-                    playerTotal += 10;
-                }else{
-                    playerTotal += 1;
-                    playerAceCount += 1;
-                }
-            }
-            for (char card:computerHand) {
-                if("23456789".contains(Character.toString(card))){
-                    computerTotal += (int)card;
-                }else if(card != 'A'){
-                    computerTotal += 10;
-                }else{
-                    computerTotal += 1;
-                    computerAceCount += 1;
-                }
-            }
-
         }while (playing);
     }
 }
