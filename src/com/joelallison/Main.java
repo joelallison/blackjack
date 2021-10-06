@@ -19,17 +19,31 @@ public class Main {
             case 's':
                 suit = "Spades";
                 break;
+            default:
+                suit = ":///";
+                break;
         }
 
         String value = "";
-        if(input.charAt(2) == '1'){
-            value = "10";
-        }else{
-            value = String.valueOf(input.charAt(2));
+        switch(input.charAt(1)){
+            case '1':
+                value = "10";
+                break;
+            case 'K':
+                value = "King";
+                break;
+            case 'Q':
+                value = "Queen";
+                break;
+            case 'J':
+                value = "Jack";
+                break;
+            case 'A':
+                value = "Ace";
+                break;
+            default:
+                value = String.valueOf(input.charAt(2));
         }
-
-        System.out.println(value + suit);
-        System.out.println(suit);
 
         return (value + " of " + suit);
     }
@@ -44,7 +58,7 @@ public class Main {
         ArrayList<String> cards = new ArrayList<String>();
         for (int suit = 0; suit < 4; suit++) {
             for (int i = 0; i < 13; i++) {
-                cards.add("o" + suits[suit] + values[i]);
+                cards.add(suits[suit] + values[i]);
             }
         }
 
