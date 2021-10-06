@@ -4,35 +4,39 @@ import java.util.*;
 
 public class Main {
 
-    String format(String input){
+    static String format(String input){
         String suit = new String();
-        switch(input.charAt(1)){
+        switch(input.charAt(0)){
             case 'c':
-                suit = "♣";
+                suit = "Clubs";
                 break;
             case 'd':
-                suit = "♦";
+                suit = "Diamonds";
                 break;
             case 'h':
-                suit = "♥";
+                suit = "Hearts";
                 break;
             case 's':
-                suit = "♠";
+                suit = "Spades";
                 break;
         }
 
         String value = "";
-        if(input.charAt(3) == '1'){
+        if(input.charAt(2) == '1'){
             value = "10";
         }else{
-            value = String.valueOf(input.charAt(3));
+            value = String.valueOf(input.charAt(2));
         }
 
-        return suit + value;
+        System.out.println(value + suit);
+        System.out.println(suit);
+
+        return (value + " of " + suit);
     }
 
     public static void main(String[] args) {
         Random random = new Random();
+        Scanner userInput = new Scanner(System.in);
 
         //generate cards
         final char[] suits = {'c','d','h','s'};
@@ -47,11 +51,6 @@ public class Main {
         ArrayList<String> playerHand = new ArrayList<String>();
         ArrayList<String> computerHand = new ArrayList<String>();
 
-        for(String card : cards){
-            System.out.println(card);
-        }
-
-
         System.out.println("Blackjack");
 
         int count = 0;
@@ -59,11 +58,19 @@ public class Main {
         boolean playing = false;
         do{
             count++;
-            int dealtCard = random.nextInt(ArrayList.size());
-            if(count % 2 == 0){
+            int dealtCard = random.nextInt(cards.size());
+            if(count % 2 == 1){
+                //player turn
                 System.out.println("Round " + count/2);
                 playerHand.add(cards.get(dealtCard));
+
+                System.out.println(cards.get(dealtCard));
+
+                for (String card:playerHand){
+                    System.out.println(format(card));
+                }
             }else{
+                //computer "turn"
                 computerHand.add(cards.get(dealtCard));
             }cards.remove(dealtCard);
         }while (playing);
