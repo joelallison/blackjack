@@ -54,6 +54,10 @@ public class Main {
         System.out.println("Blackjack");
 
         int count = 0;
+        int playerTotal = 0;
+        int playerAceCount = 0;
+        int computerTotal = 0;
+        int computerAceCount = 0;
         //game loop
         boolean playing = true;
         do{
@@ -73,6 +77,29 @@ public class Main {
                 //computer "turn"
                 computerHand.add(cards.get(dealtCard));
             }cards.remove(dealtCard);
+
+            //calc the totals
+            for (char card:playerHand) {
+                if("23456789".contains(Character.toString(card))){
+                    playerTotal += (int)card;
+                }else if(card != 'A'){
+                    playerTotal += 10;
+                }else{
+                    playerTotal += 1;
+                    playerAceCount += 1;
+                }
+            }
+            for (char card:computerHand) {
+                if("23456789".contains(Character.toString(card))){
+                    computerTotal += (int)card;
+                }else if(card != 'A'){
+                    computerTotal += 10;
+                }else{
+                    computerTotal += 1;
+                    computerAceCount += 1;
+                }
+            }
+
         }while (playing);
     }
 }
