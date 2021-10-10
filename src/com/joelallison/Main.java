@@ -16,28 +16,20 @@ public class Main {
 
 
     static String format(char input) {
-        String value = "";
         switch (input) {
             case '1':
-                value = "10";
-                break;
+                return ("10");
             case 'K':
-                value = "King";
-                break;
+                return("King");
             case 'Q':
-                value = "Queen";
-                break;
+                return("Queen");
             case 'J':
-                value = "Jack";
-                break;
+                return("Jack");
             case 'A':
-                value = "Ace";
-                break;
+                return ("Ace");
             default:
-                value = String.valueOf(input);
+                return(String.valueOf(input));
         }
-
-        return (value);
     }
 
     public static void main(String[] args) {
@@ -56,72 +48,122 @@ public class Main {
         ArrayList<Character> playerHand = new ArrayList<Character>();
         ArrayList<Character> computerHand = new ArrayList<Character>();
 
-        System.out.println("[Blackjack]\n\nThis is your dealer: ʕ·͡ᴥ·ʔ︻┳═一\n\nHe's got a gun.\n\nPlay nice.\n-----------------------------------------");
+        System.out.println("\uD83C\uDCA1  [Blackjack]  ʕ·ᴥ·͡ʔ \n\nThis is your dealer: ʕ·͡ᴥ·ʔ︻┳═一\n\nHe's got a gun.\n\nPlay nice.\n-----------------------------------------");
 
-        int count = 0;
+        int round = 0;
         int playerTotal = 0;
         int playerAceCount = 0;
         int computerTotal = 0;
         int computerAceCount = 0;
-        String choice = "";
+        String choice;
+        int specialRound;
         //game loop
         boolean playing = true;
-        do {count++;
+        boolean playerIn = true;
+        boolean computerIn = true;
+        do {round++;
 
-            //handling main gameplay
-
-            //player turn
-            int dealtCard = random.nextInt(cards.size());
-            System.out.println("Round " + ((count / 2) + (count % 2)));
-            playerHand.add(cards.get(dealtCard));
-            cards.remove(dealtCard);
-
-            //computer "turn"
-            dealtCard = random.nextInt(cards.size());
-            computerHand.add(cards.get(dealtCard));
-            cards.remove(dealtCard);
-
-            //calc totals
-            if ("23456789".contains(Character.toString(playerHand.get(playerHand.size() - 1)))) {
-                playerTotal += (int) (playerHand.get(playerHand.size() - 1)) - (int) '0';
-            } else if ((playerHand.get(playerHand.size() - 1)) != 'A') {
-                playerTotal += 10;
-            } else {
-                playerTotal += 1;
-                playerAceCount += 1;
+            if(round == 1){
+                specialRound = 2;
+            }else{
+                specialRound = 1;
             }
 
-            if ("23456789".contains(Character.toString(computerHand.get(computerHand.size() - 1)))) {
-                computerTotal += (int) (computerHand.get(computerHand.size() - 1)) - (int) '0';
-            } else if ((computerHand.get(computerHand.size() - 1)) != 'A') {
-                computerTotal += 10;
-            } else {
-                computerTotal += 1;
-                computerAceCount += 1;
+            System.out.println("\n---> Round " + round + "<---\n");
+
+            //handling main gameplay
+            //player turn
+
+            if(playerIn){
+                for (int i = 0; i < specialRound; i++) {
+                    int dealtCard = random.nextInt(cards.size());
+                    playerHand.add(cards.get(dealtCard));
+                    cards.remove(dealtCard);
+                }
+                //calc playerTotal
+                for (int i = 0; i < specialRound; i++) {
+                    if ("23456789".contains(Character.toString(playerHand.get(playerHand.size() - specialRound + i)))) {
+                        playerTotal += (int) (playerHand.get(playerHand.size() - specialRound + i)) - (int) '0';
+                    } else if ((playerHand.get(playerHand.size() - specialRound + i)) != 'A') {
+                        playerTotal += 10;
+                    } else {
+                        playerTotal += 1;
+                        playerAceCount += 1;
+                    }
+                }
+            }
+
+            //computer "turn"
+            if (computerIn){
+               for (int i = 0; i < specialRound; i++) {
+                  if(computerTotal-computerAceCount+(computerAceCount*11) < 17){
+                        if (specialRound == 1){System.out.println("The dealer hits.");}
+                        int dealtCard = random.nextInt(cards.size());
+                        computerHand.add(cards.get(dealtCard));
+                        cards.remove(dealtCard);
+                    }else{
+                        System.out.println("The dealer stands. Its total is " + (computerTotal-computerAceCount+(computerAceCount*11)));
+                        computerIn = false;
+                    }
+                }
+               //calc computerTotal
+               for (int i = 0; i < specialRound; i++) {
+                    if ("23456789".contains(Character.toString(computerHand.get(computerHand.size() - specialRound + i)))) {
+                        computerTotal += (int) (computerHand.get(computerHand.size() - specialRound + i)) - (int) '0';
+                    } else if ((computerHand.get(computerHand.size() - specialRound + i)) != 'A') {
+                        computerTotal += 10;
+                    } else {
+                        computerTotal += 1;
+                        computerAceCount += 1;
+                    }
+                }
+            }
+
+            if (specialRound == 2){
+                System.out.println("You've both drawn 2 cards (as per the rules)");
             }
 
             //end of each total round
-            System.out.println("Your cards are:" + printHand(playerHand));
-            System.out.print("\nThis means that your total is " + playerTotal);
-            //handling printing differently based on if player has ace(s)
-            if (playerAceCount > 0 && (playerTotal-playerAceCount+(playerAceCount*11) <= 21) ){
-                System.out.print(" or " + (playerTotal-playerAceCount+(playerAceCount*11)) + ". Do you want to hit or stand? [h/s]");
-            }else{  System.out.print(". Do you want to hit or stand? [h/s]");  }
-            choice = userInput.next();
-            if (choice.equals("s")){
-                playing = false;
+            if (playerIn){
+               System.out.println("Your cards are: " + printHand(playerHand));
+              System.out.print("\nThis means that your total is " + playerTotal);
+               //handling printing differently based on if player has ace(s)
+               if (playerAceCount > 0 && (playerTotal-playerAceCount+(playerAceCount*11) <= 21) ){
+                   System.out.print(" or " + (playerTotal-playerAceCount+(playerAceCount*11)) + ". Do you want to hit or stand? [h/s]");
+               }else if (playerTotal <= 21) {
+                   System.out.print(". Do you want to hit or stand? [h/s]");
+                    choice = userInput.next();
+                    if (choice.equals("s")){
+                        playerIn = false;
+                }
+                }
+                else{
+                    System.out.print(" You went bust!");
+                    playerIn = false;
+                    computerIn = false;
+                }
             }
+            if(playerIn == false && computerIn == false){playing = false;}
 
 
         } while (playing);
 
-        System.out.println("Your cards were:" + printHand(playerHand) + "\nThis means your total therefore was " + playerTotal + ".");
+        System.out.println("\nYour cards were: " + printHand(playerHand) + "\nThis means your total therefore was " + playerTotal + ".");
         if (playerAceCount > 0 && (playerTotal-playerAceCount+(playerAceCount*11) <= 21) ){
             System.out.print(" or " + (playerTotal-playerAceCount+(playerAceCount*11)) + ".");
         }
-        System.out.println("The computer's cards were " + printHand(computerHand) + "\nAnd its total was " + computerTotal + ".");
+        System.out.println("\nThe computer's cards were " + printHand(computerHand) + " This means its total was " + computerTotal + ".");
         if (computerAceCount > 0 && (computerTotal-computerAceCount+(computerAceCount*11) <= 21) ){
             System.out.print(" or " + (computerTotal-computerAceCount+(computerAceCount*11)) + ".");
+        }
+
+        //printing who won
+        if(playerTotal <= 21 && computerTotal <= 21 && (21-playerTotal) < (21-computerTotal)){
+            System.out.println("\nYou won!");
+        }else if(playerTotal > 21 && computerTotal <= 21){
+            System.out.println("\nBetter luck next time...");
+        }else if(computerTotal > 21){
+            System.out.println("\nDealer went bust! You won!");
         }
     }
 }
